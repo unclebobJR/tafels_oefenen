@@ -2,9 +2,10 @@
 
 import random
 import time
+import sys
 
 
-def main():
+def main(naam = ""):
   TOTAAL_AANTAL_SOMMEN = 20
   STREEFTIJD_PER_SOM = 1.8
 
@@ -16,7 +17,9 @@ def main():
   fouteTafel = []
   fouteLoper = []
 
-  naam = raw_input("Naam: ")
+  if naam == "":
+    naam = raw_input("Naam: ")
+  print "Welkom " + naam
 
   startTijd = time.time()
 
@@ -99,4 +102,7 @@ def getRandomNumbers(reeks, previous):
   return rnd
 
 if __name__ == '__main__':
-  main()
+  if len(sys.argv) > 1:
+    main(sys.argv[1])
+  else:
+    main("")

@@ -3,77 +3,100 @@
 import random
 import time
 
-TOTAAL_AANTAL_SOMMEN = 10
-STREEFTIJD_PER_SOM = 1.8
 
-aantalGoed = 0
-maxDoelTijd = STREEFTIJD_PER_SOM * TOTAAL_AANTAL_SOMMEN
-straf = STREEFTIJD_PER_SOM
-vorigeTafel = -1
-vorigeLoper = -1
-fouteTafel = []
-fouteLoper = []
+def main():
+  TOTAAL_AANTAL_SOMMEN = 20
+  STREEFTIJD_PER_SOM = 1.8
 
-naam = raw_input("Naam: ")
+  aantalGoed = 0
+  maxDoelTijd = STREEFTIJD_PER_SOM * TOTAAL_AANTAL_SOMMEN
+  straf = STREEFTIJD_PER_SOM * 2
+  vorigeTafel = -1
+  vorigeLoper = -1
+  fouteTafel = []
+  fouteLoper = []
 
-startTijd = time.time()
+  naam = raw_input("Naam: ")
 
-for aantal in range(1, TOTAAL_AANTAL_SOMMEN + 1):
-  tafel = random.randint(3,5)
-  while (tafel == vorigeTafel):
-    tafel = random.randint(3,5)
-  vorigeTafel = tafel
-  loper = random.randint(1,10)
-  while (loper == vorigeLoper):
-    loper = random.randint(1,10)
-  vorigeLoper = loper
-  som = str(loper) + " x " + str(tafel) + " = "
-  try:
-    poging = raw_input(som)
-    while poging == "":
-      poging = raw_input(som)
-    poging = int(poging)
+  startTijd = time.time()
+
+  for aantal in range(1, TOTAAL_AANTAL_SOMMEN + 1):
+
+    tafel = getRandomNumbers(range(3,5), vorigeTafel)
+    vorigeTafel = tafel
+    loper = getRandomNumbers(range(1,10), vorigeLoper)
+    vorigeLoper = loper
+    som = str(loper) + " x " + str(tafel) + " = "
+    poging = getNumericInput(som)
     if (poging ==  loper * tafel):
       aantalGoed = aantalGoed + 1
     else:
       fouteTafel.append(tafel)
       fouteLoper.append(loper)
-  except ValueError:
-      print "Geen getal"
-      fouteTafel.append(tafel)
-      fouteLoper.append(loper)
-      
-
-eindTijd = time.time() - startTijd
-totaalFout = TOTAAL_AANTAL_SOMMEN - aantalGoed
-print "Totaal aantal sommen: " + str(TOTAAL_AANTAL_SOMMEN)
-print "Totaal goed: " + str(aantalGoed)
-print "Totaal fout: " + str(totaalFout)
-print "Eind Tijd: " + str(eindTijd)
-print "Doel Tijd: " + str(maxDoelTijd)
-strafTijd = straf * totaalFout
-print "Straf Tijd: " + str(strafTijd)
-totaalOefenTijd = strafTijd  + eindTijd
-teLangzaamTijd = totaalOefenTijd - maxDoelTijd
-if (totaalOefenTijd <= maxDoelTijd):
-    print "====>>>>>>>> Goed Gedaan !!!!!!"
-else:
-    print str(teLangzaamTijd) + " seconden te langzaam"
-
-herkansdeGoede = 0
-for index in range(0,len(fouteTafel)):
-  som = str(fouteLoper[index]) + " x " + str(fouteTafel[index]) + " = "
-  poging = raw_input(som)
-  poging = int(poging)
-  if (poging == fouteLoper[index] * fouteTafel[index]):
-    print "Goed"
-    herkansdeGoede = herkansdeGoede + 1
+  eindTijd = time.time() - startTijd
+  totaalFout = TOTAAL_AANTAL_SOMMEN - aantalGoed
+  print "Totaal aantal sommen: " + str(TOTAAL_AANTAL_SOMMEN)
+  print "Totaal goed: " + str(aantalGoed)
+  print "Totaal fout: " + str(totaalFout)
+  print "Eind Tijd: " + str(eindTijd)
+  print "Doel Tijd: " + str(maxDoelTijd)
+  strafTijd = straf * totaalFout
+  print "Straf Tijd: " + str(strafTijd)
+  totaalOefenTijd = strafTijd  + eindTijd
+  print "Totaal oefen tijd: " + str(totaalOefenTijd)
+  teLangzaamTijd = totaalOefenTijd - maxDoelTijd
+  print "Voorlopig te langzame tijd: " + str(teLangzaamTijd)
+  if (totaalOefenTijd <= maxDoelTijd):
+      print "====>>>>>>>> Goed Gedaan !!!!!!"
   else:
-    print "Fout, antwoord is: " + str(fouteLoper[index] * fouteTafel[index])
-  
-if herkansdeGoede != 0:
-  print "Bonus tijd vanwege goede herkansing: " + str(herkansdeGoede) + " seconden"
+    if (totaalFout != 0):
+      print "=================================\n"
+      print "Herkansing voor foutieven"
+      herkansdeGoede = 0
+      for index in range(0,len(fouteTafel)):
+        som = str(fouteLoper[index]) + " x " + str(fouteTafel[index]) + " = "
+        poging = getNumericInput(som)
+        if (poging == fouteLoper[index] * fouteTafel[index]):
+          print "Goed"
+          herkansdeGoede = herkansdeGoede + 1
+        else:
+          print "Fout, antwoord is: " + str(fouteLoper[index] * fouteTafel[index])
+      if herkansdeGoede != 0:
+        print "Bonus tijd vanwege goede herkansing: " + str(herkansdeGoede) + " seconden"
+      teLangzaamTijd = teLangzaamTijd - herkansdeGoede
+  print str(teLangzaamTijd) + " seconden te langzaam"
+  print "==========================================="
+  if (teLangzaamTijd < 0):
+    print " Je ben klaar voor vandaag"
+  elif (teLangzaamTijd < 10):
+    print " Je mag 2 spelletjes doen"
+  elif (teLangzaamTijd < 20):
+    print " Je mag 1 spelletje doen"
+  elif (teLangzaamTijd < 30):
+    print " Bijna voldoende voor een spelletje"
+  else:
+    print " Probeer maar eens overnieuw"
+  print "==========================================="
+  with open("tfl_resultaten.txt", "a") as resultsFile:
+    resultsFile.write(naam + ":" + str(teLangzaamTijd) + "\n")
 
-teLangzaamTijd = teLangzaamTijd - herkansdeGoede
-with open("tfl_resultaten.txt", "a") as resultsFile:
-  resultsFile.write(naam + ":" + str(teLangzaamTijd) + "\n")
+def getNumericInput(som):
+  poging = -1
+  try:
+    poging = raw_input(som)
+    while poging == "":
+      poging = raw_input(som)
+    poging = int(poging)
+  except ValueError:
+    print "geen getal"
+  return poging
+
+
+def getRandomNumbers(reeks, previous):
+  rnd = random.choice(reeks)
+  while (rnd == previous):
+    rnd = random.choice(reeks)
+  return rnd
+
+if __name__ == '__main__':
+  main()

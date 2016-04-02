@@ -7,7 +7,6 @@ TOTAAL_AANTAL_SOMMEN = 10
 STREEFTIJD_PER_SOM = 1.8
 
 aantalGoed = 0
-startTijd = time.time()
 maxDoelTijd = STREEFTIJD_PER_SOM * TOTAAL_AANTAL_SOMMEN
 straf = STREEFTIJD_PER_SOM
 vorigeTafel = -1
@@ -16,6 +15,8 @@ fouteTafel = []
 fouteLoper = []
 
 naam = raw_input("Naam: ")
+
+startTijd = time.time()
 
 for aantal in range(1, TOTAAL_AANTAL_SOMMEN + 1):
   tafel = random.randint(3,5)

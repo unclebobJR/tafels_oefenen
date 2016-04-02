@@ -58,15 +58,21 @@ if (totaalOefenTijd <= maxDoelTijd):
     print "====>>>>>>>> Goed Gedaan !!!!!!"
 else:
     print str(teLangzaamTijd) + " seconden te langzaam"
-with open("tfl_resultaten_" + naam + ".txt", "a") as resultsFile:
-  resultsFile.write(str(teLangzaamTijd) + "\n")
 
+herkansdeGoede = 0
 for index in range(0,len(fouteTafel)):
   som = str(fouteLoper[index]) + " x " + str(fouteTafel[index]) + " = "
   poging = raw_input(som)
   poging = int(poging)
   if (poging == fouteLoper[index] * fouteTafel[index]):
     print "Goed"
+    herkansdeGoede = herkansdeGoede + 1
   else:
     print "Fout, antwoord is: " + str(fouteLoper[index] * fouteTafel[index])
   
+if herkansdeGoede != 0:
+  print "Bonus tijd vanwege goede herkansing: " + str(herkansdeGoede) + " seconden"
+
+teLangzaamTijd = teLangzaamTijd - herkansdeGoede
+with open("tfl_resultaten.txt", "a") as resultsFile:
+  resultsFile.write(naam + ":" + str(teLangzaamTijd) + "\n")
